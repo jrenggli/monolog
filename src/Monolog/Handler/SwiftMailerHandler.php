@@ -22,6 +22,7 @@ class SwiftMailerHandler extends MailHandler
 {
     protected $mailer;
     protected $message;
+    protected $contentType;
 
     /**
      * @param \Swift_Mailer           $mailer  The mailer to use
@@ -40,6 +41,12 @@ class SwiftMailerHandler extends MailHandler
             throw new \InvalidArgumentException('You must provide either a Swift_Message instance or a callable returning it');
         }
         $this->message = $message;
+        $this->contentType = 'text/plain';
+    }
+
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
     }
 
     /**
@@ -48,7 +55,7 @@ class SwiftMailerHandler extends MailHandler
     protected function send($content, array $records)
     {
         $message = clone $this->message;
-        $message->setBody($content);
+        $message->setBody($content, $this->contentType);
 
         $this->mailer->send($message);
     }
